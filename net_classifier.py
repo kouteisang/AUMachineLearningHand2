@@ -125,7 +125,7 @@ class NetClassifier():
             params = self.params
         acc = None
         ### YOUR CODE HERE
-        acc = np.mean(self.predict(X) == y)
+        acc = np.mean(self.predict(X, params) == y)
         ### END CODE
         return acc
     
@@ -212,7 +212,7 @@ class NetClassifier():
             'val_acc': None, 
         }
         ### YOUR CODE HERE
-        n = X.shape[0]
+        n = X_train.shape[0]
         history = []
         best_weight = init_params
         best_value_score = -1
@@ -223,31 +223,31 @@ class NetClassifier():
                 right = min(j + batch_size, n);
                 x = index[left:right]
                 y = index[left:right]
-                cost, grad = self.cost_grad(x, y, 0)
+                cost, grad = self.cost_grad(X_train[x], y_train[y], {'W1': W1, 'b1': b1, 'W2': W2, 'b2': b2}, 0.0)
                 W1 = W1 - lr * grad['d_w1']
                 W2 = W2 - lr * grad['d_w2']
                 b1 = b1 - lr * grad['d_b1']
                 b2 = b2 - lr * grad['d_b2']
 
-            train_cost, train_grad = self.cost_grad(X_train, y_train, params, C = 0.0)
-            train_score = self.score(X_train, y_train)
-            val_cost, val_grad = self.cost_grad(X_val, y_val, params, C = 0.0)
-            val_score = self.score(X_val, y_val)
+            train_cost, train_grad = self.cost_grad(X_train, y_train, {'W1': W1, 'b1': b1, 'W2': W2, 'b2': b2}, 0.0)
+            train_score = self.score(X_train, y_train,{'W1': W1, 'b1': b1, 'W2': W2, 'b2': b2})
+            val_cost, val_grad = self.cost_grad(X_val, y_val, {'W1': W1, 'b1': b1, 'W2': W2, 'b2': b2}, 0.0)
+            val_score = self.score(X_val, y_val,{'W1': W1, 'b1': b1, 'W2': W2, 'b2': b2})
             history.append((train_cost, train_score, val_cost, val_score))
             if val_score > best_value_score:
                 best_value_score = val_score
-                # best_weight = {'W1':W1, 'b1':b1, 'W2':W2, 'b2':b2}
+                best_weight = {'W1':W1, 'b1':b1, 'W2':W2, 'b2':b2}
         hist = {
             'train_loss' : np.array([x[0] for x in history]),
             'train_acc' : np.array([x[1] for x in history]),
-            'value_loss' : np.array([x[2] for x in history]),
-            'value_acc' : np.array([x[3] for x in history])
+            'val_loss' : np.array([x[2] for x in history]),
+            'val_acc' : np.array([x[3] for x in history])
         }
         ### END CODE
         # hist dict should look like this with something different than none
         #hist = {'train_loss': None, 'train_acc': None, 'val_loss': None, 'val_acc': None}
         ## self.params should look like this with something better than none, i.e. the best parameters found.
-        # self.params = {'W1': None, 'b1': None, 'W2': None, 'b2': None}
+        self.params = best_weight
         return hist
         
 
@@ -333,5 +333,6 @@ if __name__ == '__main__':
     d_w2 = 1 / n * np.dot(xw1_out.T, d_nn)
     # print("X")
     # print(X)
+    print(W2)
 
     test_grad()

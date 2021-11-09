@@ -2,18 +2,20 @@ import numpy as np
 
 from sklearn.datasets import fetch_openml
 
+
 def load_digits_train_data():
-    Xm, ym = fetch_openml('mnist_784', version=1, return_X_y=True)
-    #mnist = fetch_mldata('MNIST original')
-    #Xm = mnist.data
-    #ym = mnist.target
-    X_train = Xm[0:60000, :]/256.0
+    Xm, ym = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+    # mnist = fetch_mldata('MNIST original')
+    # Xm = mnist.data
+    # ym = mnist.target
+    X_train = Xm[0:60000, :] / 256.0
     y_train = ym[0:60000].squeeze().astype(int)
     return X_train, y_train
 
+
 def load_digits_test_data():
-    Xm, ym = fetch_openml('mnist_784', version=1, return_X_y=True)
-    X_train = Xm[60001:, :]/256.0
+    Xm, ym = fetch_openml('mnist_784', version=1, return_X_y=True, as_frame=False)
+    X_train = Xm[60001:, :] / 256.0
     y_train = ym[60001:].squeeze().astype(int)
     return X_train, y_train
 
@@ -38,15 +40,19 @@ def numerical_grad_check(f, x):
         tmp = x[dim]
         x[dim] = tmp + h
         cplus, _ = f(x)
-        x[dim] = tmp - h 
+        x[dim] = tmp - h
         cminus, _ = f(x)
         x[dim] = tmp
-        num_grad = (cplus-cminus)/(2*h)
-        print('grad, num_grad, grad-num_grad', grad[dim], num_grad, grad[dim]-num_grad)
-        assert np.abs(num_grad - grad[dim]) < eps, 'numerical gradient error index {0}, numerical gradient {1}, computed gradient {2}'.format(dim, num_grad, grad[dim])
+        num_grad = (cplus - cminus) / (2 * h)
+        print('grad, num_grad, grad-num_grad', grad[dim], num_grad, grad[dim] - num_grad)
+        assert np.abs(num_grad - grad[
+            dim]) < eps, 'numerical gradient error index {0}, numerical gradient {1}, computed gradient {2}'.format(dim,
+                                                                                                                    num_grad,
+                                                                                                                    grad[
+                                                                                                                        dim])
         it.iternext()
 
-    
-            
-            
-    
+
+
+
+

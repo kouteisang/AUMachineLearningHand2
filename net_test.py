@@ -1,7 +1,5 @@
 import os
-
-
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from net_classifier import NetClassifier, get_init_params
 from argparse import ArgumentParser
@@ -47,8 +45,8 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-lr', dest='lr', type=float, default=-1)
     parser.add_argument('-bs', type=int, dest='batch_size', default=-1)
-    parser.add_argument('-epochs', dest='epochs', type=int, default=-1)    
-    parser.add_argument('-hidden', dest='hidden', type=int, default=-1)    
+    parser.add_argument('-epochs', dest='epochs', type=int, default=-1)
+    parser.add_argument('-hidden', dest='hidden', type=int, default=-1)
 
     args = parser.parse_args()
     print('args', args)
